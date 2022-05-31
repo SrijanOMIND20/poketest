@@ -2,9 +2,11 @@ import * as React from 'react';
 import { useState, useRef } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import Chipdata from './chips/chipData';
 import Modal from '@mui/material/Modal';
 import Shopmodal from './modals/shopModal';
 import Icon from '@mui/material/Icon';
@@ -38,7 +40,6 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
-
 export default function Form() {
     let pokeMon={
         starter1:{
@@ -54,17 +55,21 @@ export default function Form() {
             name:"Bulbasaur"
         }
     }
-    const [starterPokemon,setstarterPokemon]=useState('');
-    const [location, setLocation] = useState('');
-    const [fullName, setFullName] = useState('');
-    const [codeName, setCodeName] = useState('');
-    const [open, setOpen] = useState(false);
-    const nameRef = useRef();
-    const codeNameRef = useRef();
-    const distanceRef = useRef();
+    const [ bill, setBill] = useState(0.0);
+    const [ starterPokemon,setstarterPokemon]=useState('');
+    const [ location, setLocation] = useState('');
+    const [ fullName, setFullName] = useState('');
+    const [ codeName, setCodeName] = useState('');
+    const [ open, setOpen] = useState(false);
+    const [ openChip, setOpenChip ] = useState(false);
+    let tempBill=0.0;
 
     const getInventory = (inventory) =>{
       console.log(inventory)
+      tempBill+=inventory.Bill;
+      setBill(bill+tempBill);
+      setOpenChip(true);
+      //console.log("Total:",(tempBill))
     }
 
     const handleChange = (event) => {
@@ -74,6 +79,11 @@ export default function Form() {
         setOpen(!open)
         //console.log(open);
     }
+
+    const handleDelete=()=>{
+      setOpenChip(false);
+    }
+
     const handleChangeTab = (event) => {
         console.log(event.target.value);
         setstarterPokemon(event.target.value);
@@ -81,10 +91,12 @@ export default function Form() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    setFullName(data.get('fullName'));
+    setCodeName(data.get('codeName'));
+    // console.log({
+    //   fullName: data.get('fullName'),
+    //   codeName: data.get('codeName'),
+    // });
   };
 
   if(location=="Kanto"){
@@ -148,7 +160,7 @@ else{
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" style={{color:"#FE5454"}}>
             Fill This Form 
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -157,10 +169,9 @@ else{
               required
               fullWidth
               color='custom'
-              id="email"
+              id="fullName"
               label="Full Name"
-              name="email"
-              autoComplete="email"
+              name="fullName"
               autoFocus
               variant='filled'
             />
@@ -169,12 +180,10 @@ else{
               required
               fullWidth
               color='custom'
-              name="password"
+              name="codeName"
               label="Code Name"
-              type="password"
-              id="password"
+              id="codeName"
               variant='filled'
-              autoComplete="current-password"
             />
             <br />
             <Slider
@@ -226,6 +235,19 @@ else{
             {open && <Shopmodal open={open} close={handleModal} theme={theme} getinventory={getInventory}/>}
             </Grid>
             </Grid>
+            <Grid container spacing={2}>
+            <Grid item xs={8}>
+            <Typography variant="body2" gutterBottom style={{color:"#889296"}}>
+                Total:
+            </Typography>
+            </Grid>
+            <Grid item xs={4}>
+                {`${bill}$`}
+            </Grid>
+            </Grid>
+            <Stack direction="row" spacing={3}>
+             {openChip && <Chipdata /> }
+          </Stack>
             <Button
               type="submit"
               fullWidth

@@ -66,17 +66,20 @@ const Shopmodal=( {open, close, theme, getinventory} )=>{
     }
 
     const showDetails=()=>{
+        let finalBill=0.0;
         console.log("Inventory",item);
         console.log("Number of items", numberOfItems);
         console.log("Bag required: ",bag);
         bag ? 
-        setBill(inventory[item]*numberOfItems+(inventory["Bag"])):
-        setBill(inventory[item]*numberOfItems)
-        console.log("Total: ",bill)
+        finalBill=(inventory[item]*numberOfItems+(inventory["Bag"])):
+        finalBill=(inventory[item]*numberOfItems)
+        console.log("Total: ",finalBill)
+        setBill(finalBill)
         const cart = 
         {
             [item]:numberOfItems,
             "Bag":bag,
+            "Bill":bill
         }
         getinventory({...cart});
         close();
