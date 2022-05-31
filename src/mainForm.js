@@ -122,11 +122,11 @@ else{
             name:"Torchic"
           },
         starter2:{
-            url:"https://assets.pokemon.com/assets/cms2/img/pokedex/full/258.png",
+            url:"https://assets.pokemon.com/assets/cms2/img/pokedex/full/252.png",
             name:"Treecko"
         },
         starter3:{
-            url:"https://assets.pokemon.com/assets/cms2/img/pokedex/full/252.png",
+            url:"https://assets.pokemon.com/assets/cms2/img/pokedex/full/258.png",
             name:"Mudkip"
         }
   } 
