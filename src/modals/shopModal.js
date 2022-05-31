@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from '@mui/material/Modal';
 import { useRef } from "react";
 import Switch from '@mui/material/Switch';
@@ -10,11 +10,29 @@ import Select from '@mui/material/Select';
 import { ThemeProvider } from "@mui/system";
 import Slider from '@mui/material/Slider';
 
-const Shopmodal=( {open, close, theme} )=>{
-    console.log("State",open);
+const Shopmodal=( {open, close, theme, getinventory} )=>{
+    // console.log("State",open);
     const [ item, setItem ] = useState('');
     const [ numberOfItems, setNumberOfItems] = useState(0);
     const [bag, setBag] = useState(false);
+    const [ bill , setBill ] = useState(0.0);
+    const inventory={
+        "Poke Ball":5,
+        "Great Ball":10,
+        "Super Potion":10,
+        "Hyper Potion":20,
+        "Bag":2
+    }
+    // useEffect(()=>{
+    //         if(item!==""){
+    //             bag ?
+    //             setBill(inventory[item]*numberOfItems + 2.0) :
+    //             setBill(inventory[item]*numberOfItems + 2.0)
+    //         }
+    //         else{
+    //             setBill(0.0);
+    //         }
+    // },[])
 
     const style = {
         position: 'absolute',
@@ -23,29 +41,51 @@ const Shopmodal=( {open, close, theme} )=>{
         transform: 'translate(-50%, -50%)',
         width: 400,
         bgcolor: 'background.paper',
-        border: '2px solid #000',
+        // border: '2px solid #000',
+        borderRadius: '5px',
         boxShadow: 24,
         p: 4,
       };
-    const select = useRef(null);
     const handleChange=(event)=>{
-        console.log(item);
         setItem(event.target.value);
+        let newItem = event.target.value
+        if(newItem!==""){
+        setBill(inventory[newItem]*numberOfItems)
+        }
+        else{
+        setBill(0.0)
+        }
     }
 
-    const requiredBag=(event)=>{
+    const requiredBag=( event )=>{
         setBag(event.target.checked)
+        let newBagReq = event.target.checked
+        newBagReq ?
+        setBill(bill+2.0) :
+        setBill(bill+0.0)
     }
 
     const showDetails=()=>{
         console.log("Inventory",item);
         console.log("Number of items", numberOfItems);
         console.log("Bag required: ",bag);
+        bag ? 
+        setBill(inventory[item]*numberOfItems+(inventory["Bag"])):
+        setBill(inventory[item]*numberOfItems)
+        console.log("Total: ",bill)
+        const cart = 
+        {
+            [item]:numberOfItems,
+            "Bag":bag,
+        }
+        getinventory({...cart});
         close();
     }
 
     const getSliderValue=(event)=>{
+        let itemNo = event.target.value
         setNumberOfItems(event.target.value);
+        setBill(inventory[item]*itemNo);
     }
 
     function valuetext(value) {
@@ -73,7 +113,6 @@ const Shopmodal=( {open, close, theme} )=>{
                 labelId="demo-simple-select-autowidth-label"
                 id="demo-simple-select-autowidth"
                 value={item}
-                ref={select}
                 fullWidth
                 onChange={handleChange}
                 >
@@ -87,7 +126,7 @@ const Shopmodal=( {open, close, theme} )=>{
         <Slider
                 size='small'
                 aria-label="pokeCenterDistance"
-                defaultValue={1}
+                defaultValue={0}
                 min={0}
                 max={10}
                 color="custom"
@@ -104,6 +143,16 @@ const Shopmodal=( {open, close, theme} )=>{
             </Grid>
             <Grid item xs={4}>
                 <Switch defaultValue="false" onChange={requiredBag} size="small" color="custom"/>
+            </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+            <Grid item xs={8}>
+            <Typography variant="body2" gutterBottom style={{color:"#889296"}}>
+                Total:
+            </Typography>
+            </Grid>
+            <Grid item xs={4}>
+                {`${bill}$`}
             </Grid>
         </Grid>
             <Box textAlign="center">

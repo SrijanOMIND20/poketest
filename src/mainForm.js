@@ -63,6 +63,10 @@ export default function Form() {
     const codeNameRef = useRef();
     const distanceRef = useRef();
 
+    const getInventory = (inventory) =>{
+      console.log(inventory)
+    }
+
     const handleChange = (event) => {
       setLocation(event.target.value);
     };
@@ -219,7 +223,7 @@ else{
             <IconButton aria-label="delete" onClick={handleModal}>
                 <AddCircleIcon color='custom' />
             </IconButton>
-            {open && <Shopmodal open={open} close={handleModal} theme={theme}/>}
+            {open && <Shopmodal open={open} close={handleModal} theme={theme} getinventory={getInventory}/>}
             </Grid>
             </Grid>
             <Button
